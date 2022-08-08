@@ -15,6 +15,11 @@ reproduce the statistical analysis of the *The cognitive effects of
 computational thinking: A systematic review and meta-analytic study*
 paper by Montuori, Gambarota, Altoè and Arfè.
 
+For a detailed description of the analysis method see the
+**supplementary materials**
+([HTML](docs/supplementary/supplementary.html),
+[PDF](docs/supplementary/supplementary.pdf))
+
 ## Setup
 
 In order to reproduce the analysis is necessary to clone or download

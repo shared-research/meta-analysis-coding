@@ -7,7 +7,11 @@ success <- function(msg){
 # compile_doc -------------------------------------------------------------
 
 compile_doc <- function(file){
-    suppressWarnings(suppressMessages(rmarkdown::render(file, quiet = T)))
+    suppressWarnings(suppressMessages(
+        rmarkdown::render(file, 
+                          output_format = c("bookdown::html_document2",
+                                            "bookdown::pdf_document2"),
+                          quiet = TRUE)))
     success(paste(basename(file), "compiled!"))
 }
 

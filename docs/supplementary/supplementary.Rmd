@@ -32,6 +32,10 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
+```{r setup-dev, eval=knitr::is_html_output(), include=FALSE}
+knitr::opts_chunk$set(dev = c("svg", "png"))
+```
+
 ```{r packages, echo=FALSE}
 devtools::load_all()
 library(tidyverse)
@@ -295,7 +299,7 @@ Given that correlations are rarely reported in published papers, we decided to i
 
 Table \@ref(tab:metatab) describe all included papers with pre-post scores for the experimental and control group along with the computed effect size. Furthermore, the table is organized grouping the affects according to the considered outcome in order to highlight the multivariate data structure.
 
-```{r metatab}
+```{r metatab, echo=FALSE}
 paper_objects$meta_table %>% 
     set_caption("Pre-post scores (M = mean, SD = standard deviation, N = sample size) for the control and experimental group. The last two columns represent the computed effect size and the variance. The effects are organized according to the outcome value and the corresponding paper.")
 ```
@@ -312,33 +316,41 @@ We assessed the impact of our modelling assumptions using a sensitivity analysis
     - *multivariate random-effect*
 - All correlations combinations ($3 \rho_{pre-post} \times 3 \rho_{aggregation} \times 3 \rho_{multivariate}$)
 
-In this way we computed `r 3*3*3*4` meta-analysis directly assessing the impact on the parameters estimation and p-values. All plots in the following pages depicted the sensitivity analysis for each outcome. Triangles indicates parameters with $p < 0.05$ while points indicates parameters with $p > 0.05$. Red shapes indicates the correlations/model combination included in the paper. Clearly, *random effect models* (both *univariate* and *multivariate*) is associated with wider confidence intervals (i.e., less precise estimation) compared to *fixed effect models*.
+In this way we computed `r 3*3*3*2+3*3*2` meta-analysis directly assessing the impact on the parameters estimation and p-values^[For *multivariate* models (*fixed* and *random*) we have 3x3x3 correlation combinations while for *univariate* models (*fixed* and *random*) only 3x3 ($\rho_{pre-post}$ and $\rho_{agg}$)]. All plots in the following pages depicted the sensitivity analysis for each outcome. Triangles indicates parameters with $p < 0.05$ while points indicates parameters with $p > 0.05$. Red shapes indicates the correlations/model combination included in the paper. Clearly, *random effect models* (both *univariate* and *multivariate*) is associated with wider confidence intervals (i.e., less precise estimation) compared to *fixed effect models*. To note, given that the $\rho_{multi}$ is not relevant for *univariate* models, the lower part of the figure is repeated.
 
 `r if(rmd_format == "pdf") {"\\begin{landscape}"}`
 
-```{r, echo = FALSE, cognitive-flessibility-plot}
+```{r, echo=FALSE}
+# here we removed some redundant elements from the ggplot object 
+elem_to_remove <- c(
+    sprintf("axis-b-%d-4", c(2,4,6,8)),
+    sprintf("panel-%s-%s", c(3,4,1,4,1,2,1,2,3,4,3,2), c(5,5,6,7,8,8,7,7,7,9,9,9))
+)
+```
+
+```{r, echo = FALSE, cognitive-flexibility-acc-plot}
 dat_sens$plot_sens_estimate[[1]] %>%  
-    remove_element_ggplot(sprintf("axis-b-%d-4", c(2,4,6,8)))
+    remove_element_ggplot(elem_to_remove)
 ```
 
 ```{r, echo = FALSE, inhibition-accuracy-plot}
 dat_sens$plot_sens_estimate[[2]] %>%  
-    remove_element_ggplot(sprintf("axis-b-%d-4", c(2,4,6,8)))
+    remove_element_ggplot(elem_to_remove)
 ```
 
 ```{r, echo = FALSE, planning-accuracy-plot}
 dat_sens$plot_sens_estimate[[3]] %>%  
-    remove_element_ggplot(sprintf("axis-b-%d-4", c(2,4,6,8)))
+    remove_element_ggplot(elem_to_remove)
 ```
 
 ```{r, echo = FALSE, problem-solving-plot}
 dat_sens$plot_sens_estimate[[4]] %>%  
-    remove_element_ggplot(sprintf("axis-b-%d-4", c(2,4,6,8)))
+    remove_element_ggplot(elem_to_remove)
 ```
 
 ```{r, echo = FALSE, working-memory-accuracy-plot}
 dat_sens$plot_sens_estimate[[5]] %>%  
-    remove_element_ggplot(sprintf("axis-b-%d-4", c(2,4,6,8)))
+    remove_element_ggplot(elem_to_remove)
 ```
 
 `r if(rmd_format == "pdf") {"\\end{landscape}"}`

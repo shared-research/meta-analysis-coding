@@ -517,10 +517,10 @@
     },
     "flextable": {
       "Package": "flextable",
-      "Version": "0.7.2",
+      "Version": "0.6.10",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f2702eb2a89690201c2767161e350189",
+      "Hash": "4d80053f3159dff0b2c741350d7c2c9c",
       "Requirements": [
         "base64enc",
         "data.table",

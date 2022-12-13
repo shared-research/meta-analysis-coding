@@ -94,3 +94,13 @@ conditionally <- function(fun){
         if (execute) fun(...) else ..1
     }
 }
+
+# message -----------------------------------------------------------------
+
+test <- function(res, name){
+    if(res){
+        cli::cli_alert_success(name)
+    }else{
+        cli::cli_alert_danger(name)
+    }
+}

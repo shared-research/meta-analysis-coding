@@ -1,33 +1,34 @@
 # --- EFFECT SIZE UTILS --- #
 
-# get_dpcc2 -----------------------------------------------------------
+# get_dppc2 -----------------------------------------------------------
 
-# This function compute the dpcc2
+# This function compute the dppc2
 
-get_dpcc2 <- function(mt_pre, mt_post, mc_pre, mc_post,
-                          st_pre, st_post, sc_pre, sc_post,
-                          nt, nc){
+get_dppc2 <- function(mt_pre, mt_post, mc_pre, mc_post,
+                      st_pre, st_post, sc_pre, sc_post,
+                      nt, nc){
     
     mdiff <- (mt_post - mt_pre) - (mc_post - mc_pre)
-    poolvar <- sqrt(((((nt - 1) * st_pre^2) + ((nc - 1) * sc_pre^2)) / (nt + nc - 2)))
-    cp <- 1 - (3/(4*(nt + nc - 2) - 1))
+    poolsd <- sqrt(((((nt - 1) * st_pre^2) + ((nc - 1) * sc_pre^2)) / (nt + nc - 2)))
+    #cp <- 1 - (3/(4*(nt + nc - 2) - 1))
+    cp <- metafor:::.cmicalc(nt + nc - 2)
     
-    dpcc2 <- (mdiff / poolvar) * cp
+    dppc2 <- cp * (mdiff / poolsd)
     
-    return(dpcc2)
+    return(dppc2)
     
 }
 
-# get_dpcc2_var -----------------------------------------------------------
+# get_dppc2_var -----------------------------------------------------------
 
-# This function compute the dpcc2 variance. The rho argument is the pre-post
+# This function compute the dppc2 variance. The rho argument is the pre-post
 # correlation
 
-get_dpcc2_var <- function(dpcc2, nt, nc, rho){
+get_dppc2_var <- function(dppc2, nt, nc, rho){
     
-    dpcc2_var <- 2*(1-rho) * (1/nt + 1/nc) + dpcc2^2 / (2*(nt + nc))
+    dppc2_var <- 2*(1-rho) * (1/nt + 1/nc) + dppc2^2 / (2*(nt + nc))
     
-    return(dpcc2_var)
+    return(dppc2_var)
     
 }
 
@@ -35,12 +36,12 @@ get_dpcc2_var <- function(dpcc2, nt, nc, rho){
 
 compute_effect_size <- function(data, rho){
     data %>% 
-        mutate(eff_size = get_dpcc2(mt_pre = M_pre_EX, mt_post = M_post_EX, 
+        mutate(eff_size = get_dppc2(mt_pre = M_pre_EX, mt_post = M_post_EX, 
                                     mc_pre = M_pre_CT, mc_post = M_post_CT,
                                     st_pre = SD_pre_EX, st_post = SD_post_EX, 
                                     sc_pre = SD_pre_CT, sc_post = SD_post_CT,
                                     nt = n_EX, nc = n_CT),
-               eff_size_var = get_dpcc2_var(eff_size, 
+               eff_size_var = get_dppc2_var(eff_size, 
                                             nt = n_EX, nc = n_CT, 
                                             rho = rho))
 }
@@ -73,14 +74,14 @@ tidy_meta_params <- function(fit, conf_level = 0.95){
 # Is ready to be binded to the parameters summary in order to have a dataframe
 # with all estimations
 
-# random = random effect model
-# multilev = multilevel model (aka 3 level model)
-# mutlivar = multivariate model
+# random = univariate random effect
+# multilev = multilevel random effect model (aka 3 level model)
+# mutlivar = multivariate random model
 
 # The argument need to be specified because the tau estimations are logged in
 # different ways depending on the model
 
-tidy_meta_tau <- function(fit, type = c("random", "multilev", "multivar")){
+tidy_meta_tau <- function(fit, type = c("fixed", "random", "multilev", "multivar")){
     
     type <- match.arg(type)
     
@@ -119,7 +120,9 @@ tidy_meta_tau <- function(fit, type = c("random", "multilev", "multivar")){
 # This is a simple wrapper for tidy_meta_tau and tidy_meta_params in order to
 # create the final dataframe
 
-tidy_meta <- function(fit, conf_level = 0.95, type = c("random", "3l", "multi", "fixed")){
+tidy_meta <- function(fit, conf_level = 0.95, type = c("fixed", "random", "multilev", "multivar")){
+    
+    type <- match.arg(type)
     
     out <- tidy_meta_params(fit, conf_level = conf_level)
     

@@ -2,14 +2,14 @@
 
 # This function fit a multivariate model using the cov_matrix argument
 
-fit_multi_random <- function(data, cov_matrix){
+fit_multi_random <- function(data, cov_matrix, struct = "UN"){
+    
     rma.mv(
         yi = eff_size,
         V = cov_matrix,
         mods = ~ 0 + outcome2,
         random = ~ outcome2|paper_id,
-        struct = "UN",
-        method = "ML",
+        struct = struct,
         data = data)
 }
 
@@ -18,11 +18,10 @@ fit_multi_random <- function(data, cov_matrix){
 # This function fit a multivariate fixed effect meta-analysis
 
 fit_multi_fixed <- function(data, cov_matrix){
-    rma.mv(
-        yi = eff_size,
-        V = cov_matrix,
-        mods = ~ 0 + outcome2,
-        data = data)
+    rma.mv(yi = eff_size,
+           V = cov_matrix,
+           mods = ~ 0 + outcome2,
+           data = data)
 }
 
 # fit_uni_fixed -----------------------------------------------------------
@@ -36,7 +35,6 @@ fit_uni_fixed <- function(data){
         method = "FE",
         data = data)
 }
-
 
 # fit_uni_random ----------------------------------------------------------
 

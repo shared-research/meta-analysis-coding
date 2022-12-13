@@ -12,7 +12,9 @@ remove_y_text <- function(){
 
 # prep_data_forest_multi --------------------------------------------------
 
-prep_data_forest_multi <- function(dat_agg, dat_model){
+prep_data_forest_multi <- function(fit, dat_model){
+    
+    dat_agg <- fit$data
     
     dat_forest <- dat_agg %>% 
         select(paper_id, outcome2, eff_size, eff_size_se)
@@ -24,6 +26,9 @@ prep_data_forest_multi <- function(dat_agg, dat_model){
                "eff_size" = estimate,
                "eff_size_se" = std.error) %>% 
         select(paper_id, outcome2, eff_size, eff_size_se)
+    
+    dat_forest$wi <- weights(fit)
+    dat_forest_fit$wi <- 0
     
     dat_forest_multi <- bind_rows(dat_forest, dat_forest_fit)
     
@@ -37,9 +42,7 @@ prep_data_forest_multi <- function(dat_agg, dat_model){
 
 # forest_plot_multi -------------------------------------------------------
 
-forest_plot_multi <- function(dat_forest_multi){
-    
-    # TODO try to draw diamond
+forest_plot_multi <- function(dat_forest_multi, wi = FALSE){
     
     dat_forest_multi %>% 
         ggplot() +
@@ -53,19 +56,10 @@ forest_plot_multi <- function(dat_forest_multi){
                    col = "black", 
                    linetype = "dashed") +
         
-        # Average Effect
-        
-        # geom_rect(data = dat_forest_multi %>% filter(paper_id == "Average"),
-        #           aes(xmin = .lower,
-        #               xmax = .upper,
-        #               ymax = 1.01,
-        #               ymin = 0.90),
-        #           fill = "firebrick1") +
-        
         # All papers
         
         geom_pointrange(data = dat_forest_multi %>% filter(paper_id != "Average"),
-                        aes(x = eff_size, 
+                        aes(x = eff_size,
                             y = factor(paper_id),
                             xmin = .lower,
                             xmax = .upper),
@@ -73,6 +67,16 @@ forest_plot_multi <- function(dat_forest_multi){
                         size = 0.70,
                         shape = 15) +
         
+        # geom_point(data = dat_forest_multi %>% filter(paper_id != "Average"),
+        #            aes(x = eff_size, 
+        #                y = factor(paper_id),
+        #                size = wi),
+        #            shape = 15,
+        #            show.legend = FALSE) +
+        # geom_segment(data = dat_forest_multi %>% filter(paper_id != "Average"),
+        #              aes(x = .lower, xend = .upper,
+        #                  y = factor(paper_id), yend = factor(paper_id))) +
+        # 
         # Outcome
         
         facet_grid(~outcome2, labeller = label_wrap_gen(width = 4, multi_line = TRUE)) +

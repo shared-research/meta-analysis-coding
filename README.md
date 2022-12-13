@@ -1,19 +1,17 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Meta-analysis coding
+# The Cognitive Effects of Computational Thinking: A Systematic Review and Meta-Analytic Study
 
 <!-- badges: start -->
 
 [<img alt="alt_text" src="https://img.shields.io/badge/OSF-DOI%2010.17605%2FOSF.IO%2FUVBCD-blue" />](https://osf.io/uvbcd/)
 <!-- badges: end -->
 
-<!-- badges: end -->
-
 This repository contains all the scripts, functions and data to fully
 reproduce the statistical analysis of the *The cognitive effects of
 computational thinking: A systematic review and meta-analytic study*
-paper by Montuori, Gambarota, Altoè and Arfè.
+paper by Montuori C., Gambarota F., Altoè G. and Arfè B.
 
 For a detailed description of the analysis method see the
 **supplementary materials**
@@ -24,31 +22,32 @@ For a detailed description of the analysis method see the
 
 In order to reproduce the analysis is necessary to clone or download
 this repository and open the `metaCoding.Rproj`. Then the `renv` package
-will install all required packages. After installing all packages, the
-`main_script.R` can run each analysis step.
+will install all required packages with the correct version. After
+installing all packages, the `main_script.R` or individual scripts
+(`scripts/*`) can be used to run each analysis step.
 
 ## Folders organization
 
--   `data/`: contains raw and cleaned data in `.rds` and `.xlsx`/`.csv`
-    format
--   `docs/`: contains scripts to create the supplementary materials
--   `main_script.R`: is a script for easily managing all analysis steps
--   `objects/`: contains R objects in `.rds` format created from the
-    analysis scripts
--   `R/`: contains all custom functions for the project. Functions are
-    automatically loaded when the project is loaded. For reloading use
-    `devtools::load_all()`
--   `scripts/`: main scripts for pre-processing, statistical analysis
-    and creating tables/figures
-    -   `1_analysis.R`: Scripts for calculating the effect size and
-        computing the meta-analysis models
-    -   `2_tables_figures.R`: Script to create tables and figures for
-        the paper
-    -   `3_supplementary.R`: Script to create supplementary materials
-        objects
--   `tables/`: contains tables created with the `2_tables_figures.R` in
-    `.docx` format
--   `tests/`: is for testing the effect size computation functions
+- `data/`: contains raw and cleaned data in `.rds` and `.xlsx`/`.csv`
+  format
+- `docs/`: contains scripts to create the supplementary materials
+- `main_script.R`: is a script for easily managing all analysis steps
+- `objects/`: contains R objects in `.rds` format created from the
+  analysis scripts
+- `R/`: contains all custom functions for the project. Functions are
+  automatically loaded when the project is loaded. For reloading use
+  `devtools::load_all()`
+- `scripts/`: main scripts for pre-processing, statistical analysis and
+  creating tables/figures
+  - `1_analysis.R`: Scripts for calculating the effect size and
+    computing the meta-analysis models
+  - `2_tables_figures.R`: Script to create tables and figures for the
+    paper
+  - `3_supplementary.R`: Script to create supplementary materials
+    objects
+- `tables/`: contains tables created with the `2_tables_figures.R` in
+  `.docx` format
+- `tests/`: is for testing the effect size computation functions
 
 ## Coding style
 

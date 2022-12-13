@@ -13,22 +13,19 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Meta-analysis coding
+# The Cognitive Effects of Computational Thinking: A Systematic Review and Meta-Analytic Study
 
 <!-- badges: start -->
 [<img alt="alt_text" src="https://img.shields.io/badge/OSF-DOI%2010.17605%2FOSF.IO%2FUVBCD-blue" />](https://osf.io/uvbcd/)
 <!-- badges: end -->
 
-<!-- badges: end -->
-
-This repository contains all the scripts, functions and data to fully reproduce the statistical analysis of the *The cognitive effects of computational thinking: A systematic review and meta-analytic study* paper by Montuori, Gambarota, Altoè and Arfè.
+This repository contains all the scripts, functions and data to fully reproduce the statistical analysis of the *The cognitive effects of computational thinking: A systematic review and meta-analytic study* paper by Montuori C., Gambarota F., Altoè G. and Arfè B.
 
 For a detailed description of the analysis method see the **supplementary materials** ([HTML](docs/supplementary/supplementary.html), [PDF](docs/supplementary/supplementary.pdf))
 
 ## Setup
 
-In order to reproduce the analysis is necessary to clone or download this repository and open the `metaCoding.Rproj`. Then the `renv` package will install all required packages.
-After installing all packages, the `main_script.R` can run each analysis step.
+In order to reproduce the analysis is necessary to clone or download this repository and open the `metaCoding.Rproj`. Then the `renv` package will install all required packages with the correct version. After installing all packages, the `main_script.R` or individual scripts (`scripts/*`) can be used to run each analysis step.
 
 ## Folders organization
 

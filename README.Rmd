@@ -11,6 +11,9 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+devtools::load_all()
+pkgs <- get_all_packages()
 ```
 
 # The Cognitive Effects of Computational Thinking: A Systematic Review and Meta-Analytic Study
@@ -44,3 +47,18 @@ In order to reproduce the analysis is necessary to clone or download this reposi
 ## Coding style
 
 The analysis project is organized as an R package where functions within the `R/` folder are automatically available into the global environment when the project is activated (`metaCoding.Rproj`). Is possible to manually load the functions using `devtools::load_all()`. The coding style is based on the [*tidyverse*](https://www.tidyverse.org/) using also [*metaprogramming*](https://adv-r.hadley.nz/meta-big-picture.html). For managing multiple meta-analysis models we used *nested tibbles* as data structure (see [here](https://r4ds.had.co.nz/many-models.html)). In particular the `objects/dat_meta.rds` contains all processing steps and models as different columns.
+
+# Session Info
+
+```{r, echo = FALSE}
+sinfo <- sessioninfo::session_info()
+sinfo$platform
+```
+
+# R Packages
+
+```{r, results='asis', echo=FALSE}
+pkgs <- sprintf("- `%s`", pkgs)
+cat(pkgs, sep = "\n")
+```
+

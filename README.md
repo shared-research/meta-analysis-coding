@@ -61,3 +61,44 @@ For managing multiple meta-analysis models we used *nested tibbles* as
 data structure (see [here](https://r4ds.had.co.nz/many-models.html)). In
 particular the `objects/dat_meta.rds` contains all processing steps and
 models as different columns.
+
+# Session Info
+
+    #>  setting  value
+    #>  version  R version 4.2.2 (2022-10-31 ucrt)
+    #>  os       Windows 10 x64 (build 19044)
+    #>  system   x86_64, mingw32
+    #>  ui       RTerm
+    #>  language (EN)
+    #>  collate  English_United States.utf8
+    #>  ctype    English_United States.utf8
+    #>  tz       Europe/Berlin
+    #>  date     2022-12-13
+    #>  pandoc   2.19.2 @ C:/Program Files/RStudio/bin/quarto/bin/tools/ (via rmarkdown)
+
+# R Packages
+
+- `devtools`
+- `testthat`
+- `rmarkdown`
+- `bookdown`
+- `knitr`
+- `flextable`
+- `here`
+- `tidyverse`
+- `broom.mixed`
+- `metafor`
+- `purrr`
+- `rlang`
+- `cowplot`
+- `ggh4x`
+- `grid`
+- `latex2exp`
+- `ftExtra`
+- `cli`
+- `renv`
+- `sessioninfo`
+- `officer`
+- `readxl`
+- `dplyr`
+- `magrittr`

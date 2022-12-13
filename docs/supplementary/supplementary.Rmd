@@ -1,25 +1,23 @@
 ---
 title: "The Cognitive Effects of Computational Thinking: A Systematic Review and Meta-Analytic Study"
 subtitle: "Supplementary materials"
-author:
-    - Chiara Montuori^[Department of Developmental and Social Psychology, chiara.montuori@phd.unipd.it]
-    - Filippo Gambarota^[Department of Developmental and Social Psychology, filippo.gambarota@gmail.com]
-    - Gianmarco Altoè^[Department of Developmental and Social Psychology, gianmarco.altoe@unipd.it]
-    - Barbara Arfè^[Department of Developmental and Social Psychology, barbara.arfe@unipd.it]
-bibliography: ../files/references.bib
+bibliography: ../files/prova.bib
 csl: ../files/apa7.csl
 header-includes:
     - \usepackage{fullpage}
     - \usepackage{pdflscape}
     - \usepackage{afterpage}
+    - \usepackage{authblk}
 output:
-    bookdown::pdf_document2:
-        keep_tex: true
-        latex_engine: lualatex
     bookdown::html_document2:
         keep_md: yes
         toc: true
         toc_float: true
+    bookdown::pdf_document2:
+        keep_tex: true
+        latex_engine: lualatex
+        includes:
+            in_header: preamble.sty
 ---
 
 ```{r setup, include=FALSE}
@@ -30,6 +28,16 @@ knitr::opts_chunk$set(echo = TRUE,
                       fig.asp = 0.618,
                       warning = FALSE,
                       message = FALSE)
+
+# thanks to https://aimundo.rbind.io/blog/using-bookdown-differen   t-authors-in-a-document/
+remove_author <- function(x) {
+  # identify empty author line
+  i <- grep("^\\\\author\\{\\}$", x)
+  # be sure it is the one pandoc inserts
+  if(length(i) != 0 && grepl('^\\\\date\\{', x[i+1])) x <- x[-i]
+  x
+}
+options(bookdown.post.latex = remove_author)
 ```
 
 ```{r setup-dev, eval=knitr::is_html_output(), include=FALSE}
@@ -121,12 +129,12 @@ The raw dataset is available on the online [Open Science Framework repository](h
 
 - renaming relevant columns
 - re-coding the `outcome` variable into the `outcome2` variable (see the main paper for the rationale)
-- separating the Arfè et al. (2019) paper into two separate papers (see Section \@ref(arfe2019))
+- separating the [@Arfe2019-hz] paper into two separate papers (see Section \@ref(arfe2019))
 - converting outcomes names into English
 
 ### Arfè et al. (2019) {#arfe2019}
 
-Arfè et al. (2019) is the only paper that contains multiple independent (i.e., with different participants) sub-studies creating a multilevel structure. To reduce the data complexity we decided to consider these studies as two independent papers, creating Arfè et al. (2019a) and Arfè et al. (2019b).
+Arfè et al. [-@Arfe2019-hz] is the only paper that contains multiple independent (i.e., with different participants) sub-studies creating a multilevel structure. To reduce the data complexity we decided to consider these studies as two independent papers, creating Arfè et al. (2019a) and Arfè et al. (2019b).
 
 ## Multiple effects for the same outcome{#aggregation}
 

@@ -8,7 +8,7 @@
 #' @return A \code{flextable}object
 #' @export
 
-multivariate_table <- function(data, col, digits = 3, fit, add_resid_test = FALSE){
+multivariate_table <- function(data, col, digits = 3, fit){
     data %>% 
         filter(type == "summary") %>% 
         p_value_to_string(p.value) %>% 
@@ -18,7 +18,7 @@ multivariate_table <- function(data, col, digits = 3, fit, add_resid_test = FALS
         select(term, estimate, std.error, "95% CI", statistic, p.value) %>% 
         flextable::flextable() %>% 
         flextable::set_header_labels(term = "Outcome",
-                                     estimate = "\u03b2",
+                                     estimate = "d~ppc2~",
                                      std.error = "SE",
                                      conf.low = "95% CI",
                                      conf.high = "95% CI",
@@ -31,9 +31,9 @@ multivariate_table <- function(data, col, digits = 3, fit, add_resid_test = FALS
         flextable::align(j = c(2:6), part = "body", align = "center") %>% 
         flextable::italic(part = "header", j = 6) %>% 
         add_qm_stat(fit) %>% 
-        conditionally(add_qe_stat)(fit, execute = add_resid_test) %>%
         add_cor_table(data) %>%
-        fontsize(size = 10, part = "footer")
+        fontsize(size = 10, part = "footer") %>% 
+        ftExtra::colformat_md(part = "all")
 }
 
 # get_data -------------------------------------------------------------
@@ -113,8 +113,7 @@ round_numeric_cols <- function(data, digits){
 
 add_cor_table <- function(tab, data){
     tab %>% 
-        flextable::footnote(ref_symbols = "",
-                 value = as_paragraph("\u03c1", as_sub("pre-post"), " = ", data$morris_cor[1], ", ",
+        add_footer_lines(value = as_paragraph("\u03c1", as_sub("pre-post"), " = ", data$morris_cor[1], ", ",
                                       "\u03c1", as_sub("agg"), " = ", data$boren_cor[1], ", ",
                                       "\u03c1", as_sub("multi"), " = ", data$multi_cor[1]))
 }
@@ -134,12 +133,14 @@ add_qm_stat <- function(tab, fit){
 
     if(qm_stat$type == "Chisq"){
         tab %>% 
-            flextable::footnote(ref_symbols = "",
-                     value = as_paragraph(as_i("Omnibus Test"), "  ", "\u03C7", as_sub(qm_stat$QMdf), "=", "  ", qm_stat$QM, "  ", qm_stat$QMp))
+            add_footer_lines(value = as_paragraph(as_i("Omnibus Test"), "  ", 
+                                                  "\u03C7", as_sub(qm_stat$QMdf), "=", 
+                                                  "  ", qm_stat$QM, "  ", qm_stat$QMp))
     }else{
         tab %>% 
-            flextable::footnote(ref_symbols = "",
-                    value = as_paragraph(as_i("Omnibus Test"), "  ", "F", as_sub(paste(qm_stat$QMdf[1], qm_stat$QMdf[2])), "=", "  ", qm_stat$QM, "  ", qm_stat$QMp))
+            add_footer_lines(values = as_paragraph(as_i("Omnibus Test"), "  ", 
+                                                   "F", as_sub(paste(qm_stat$QMdf[1], qm_stat$QMdf[2])), 
+                                                   "=", "  ", qm_stat$QM, "  ", qm_stat$QMp))
     }
 
 }
@@ -164,6 +165,7 @@ get_qe_stat <- function(fit){
 add_qe_stat <- function(tab, fit){
     qe_stat <- get_qe_stat(fit)
     tab %>% 
-        flextable::footnote(ref_symbols = "",
-                value = as_paragraph(as_i("Residual Heterogeneity"), "  ", "Q", as_sub(qe_stat$QEdf), "=", "  ", qe_stat$QE, "  ", qe_stat$QEp))
+        flextable::add_footer_lines(values = as_paragraph(as_i("Residual Heterogeneity"), "  ", 
+                                                          "Q", as_sub(qe_stat$QEdf), "=", 
+                                                          "  ", qe_stat$QE, "  ", qe_stat$QEp))
 }

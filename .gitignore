@@ -42,3 +42,7 @@ vignettes/*.pdf
 po/*~
 
 # Project Specific
+
+local/
+0_pre_*
+data/authors_data/

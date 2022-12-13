@@ -27,7 +27,7 @@ df_metadata %>%
 # Prepare data
 
 dat_sens <- dat_meta_post %>% 
-    select(ends_with("cor"), tidy_meta_uni_fixed, tidy_meta_multi_random, tidy_meta_multi_fixed, tidy_meta_uni_random) %>% 
+    select(ends_with("cor"), starts_with("tidy_meta_uni"), starts_with("tidy_meta_multi")) %>% 
     pivot_longer(starts_with("tidy"), names_to = "model", values_to = "data") %>% 
     unnest(data) %>% 
     filter(type == "summary") %>% 
@@ -49,4 +49,4 @@ dat_sens <- dat_sens %>%
 
 # Save Plots
 
-saveRDS(dat_sens, "objects/dat_sens.rds")
+saveRDS(dat_sens, "objects/dat_sens_un.rds")

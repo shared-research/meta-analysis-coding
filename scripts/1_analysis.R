@@ -5,6 +5,8 @@ library(metafor)
 library(broom.mixed)
 library(here)
 
+devtools::load_all()
+
 # Prepare data for models
 
 prep_data <- function(data){
@@ -17,8 +19,7 @@ prep_data <- function(data){
                # Converting to factors
                year = factor(year),
                paper = factor(paper),
-               paper_id = factor(paper_id)) %>% 
-        select(-eff_size_before_flip)
+               paper_id = factor(paper_id))
 }
 
 # Importing Data ----------------------------------------------------------
@@ -54,6 +55,7 @@ dat_meta <- dat_grid %>%
 
 # Models ------------------------------------------------------------------
 
+# fitting all models
 dat_meta <- dat_meta %>% 
     mutate(meta_uni_fixed = map_depth(data_uni, fit_uni_fixed, .depth = 2),
            meta_uni_random = map_depth(data_uni, fit_uni_random, .depth = 2),
@@ -62,6 +64,7 @@ dat_meta <- dat_meta %>%
 
 #  Post-processing --------------------------------------------------------
 
+# extracting all relevant parameters
 dat_meta_post <- dat_meta %>% 
     mutate(tidy_meta_uni_fixed = map_depth(meta_uni_fixed, 
                                            tidy_meta, 
@@ -73,14 +76,14 @@ dat_meta_post <- dat_meta %>%
            tidy_meta_uni_random = map(tidy_meta_uni_random, bind_rows, .id = "outcome"),
            tidy_meta_multi_random = map(meta_multi_random, tidy_meta, type = "multivar"),
            tidy_meta_multi_fixed = map(meta_multi_fixed, tidy_meta, type = "multivar")) %>% 
-    select(ends_with("cor"), data_agg, starts_with("tidy"))
+    select(ends_with("cor"), data_agg, starts_with("tidy"), starts_with("meta_"))
 
 # Plots -------------------------------------------------------------------
 
 dat_meta_post <- dat_meta_post %>% 
-    mutate(plot_multi_fixed = map2(data_agg, tidy_meta_multi_fixed, prep_data_forest_multi),
+    mutate(plot_multi_fixed = map2(meta_multi_fixed, tidy_meta_multi_fixed, prep_data_forest_multi),
            plot_multi_fixed = map(plot_multi_fixed, forest_plot_multi),
-           plot_multi_random = map2(data_agg, tidy_meta_multi_random, prep_data_forest_multi),
+           plot_multi_random = map2(meta_multi_random, tidy_meta_multi_random, prep_data_forest_multi),
            plot_multi_random = map(plot_multi_random, forest_plot_multi))
 
 # Saving ------------------------------------------------------------------

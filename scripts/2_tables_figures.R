@@ -5,6 +5,8 @@ library(flextable)
 library(officer)
 library(here)
 
+devtools::load_all()
+
 # Loading Data ------------------------------------------------------------
 
 dat_meta <- read_rds(here("objects", "dat_meta.rds"))
@@ -41,8 +43,9 @@ par_list <- list(
     SD_pre_CT = as_paragraph("SD", as_sub("pre")),
     SD_post_CT = as_paragraph("SD", as_sub("post")),
     # Effect size
-    eff_size = as_paragraph("d", as_sub("ppc2")),
-    eff_size_var = as_paragraph("\u03C3", as_sup(2L), " d", as_sub("ppc2"))
+    #eff_size = as_paragraph("d", as_sub("ppc2")),
+    #eff_size_var = as_paragraph("\u03C3", as_sup(2L), " d", as_sub("ppc2"))
+    dpcc2 = as_paragraph("d", as_sub("ppc2"), "(\u03C3)")
 )
 
 ## Characters for creating the upper header row
@@ -51,7 +54,7 @@ header_list <- c(
     rep("", 2),
     rep("Experimental Group", 5),
     rep("Control Group", 5),
-    rep("Effect size", 2)
+    rep("", 1)
 )
 
 ## Creating table
@@ -64,12 +67,13 @@ dat_table_meta <- dat_meta %>%
            n_EX, M_pre_EX, M_post_EX, SD_pre_EX, SD_post_EX,
            n_CT, M_pre_CT, M_post_CT, SD_pre_CT, SD_post_CT,
            eff_size, eff_size_var) %>% 
-    arrange(outcome2)
+    arrange(outcome2) %>% 
+    mutate(dpcc2 = sprintf("%.2f (%.2f)", eff_size, eff_size_var)) %>% 
+    select(-eff_size, -eff_size_var)
 
 meta_table <- dat_table_meta %>% 
     flextable() %>% 
     colformat_double(digits = 2) %>% 
-    #set_header_labels(values = col_names) %>% 
     add_par_header(par_list = par_list) %>% 
     autofit() %>% 
     theme_vanilla() %>% 
@@ -84,7 +88,7 @@ meta_table <- dat_table_meta %>%
     fontsize(size = 9, part = "header") %>% 
     width(j = 1:2, width = 1, unit = "in") %>% 
     width(j = 3:12, width = 0.3, unit = "in") %>% 
-    width(j = 13:14, width = 0.5, unit = "in") %>% 
+    width(j = 13, width = 1, unit = "in") %>% 
     fit_to_width(max_width = sect_properties$page_size$width)
 
 ## Saving as .docx file
@@ -105,10 +109,10 @@ save_as_docx(model_table,
 
 # Forest Plot -------------------------------------------------------------
 
-dat_forest_multi <- prep_data_forest_multi(dat_meta_post %>% 
-                                               get_data(data_agg),
-                                           dat_meta_post %>% 
-                                               get_data(tidy_meta_multi_fixed))
+model_to_plot <- get_model(dat_meta, meta_multi_fixed)
+data_to_plot <- get_data(dat_meta_post, tidy_meta_multi_fixed)
+
+dat_forest_multi <- prep_data_forest_multi(model_to_plot, data_to_plot)
 
 ## Creating the polygons coordinates for the avg effect
 
@@ -148,9 +152,7 @@ paper_objects <- list(
     forest_multi = forest_multi
 )
 
-saveRDS(paper_objects, file = here("objects", "paper_objects.rds"))
-
-
 # Saving ------------------------------------------------------------------
 
+saveRDS(paper_objects, file = here("objects", "paper_objects.rds"))
 ggsave("figures/forest_multi.pdf", paper_objects$forest_multi, width = 10, height = 6)

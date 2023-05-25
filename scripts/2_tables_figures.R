@@ -156,3 +156,4 @@ paper_objects <- list(
 
 saveRDS(paper_objects, file = here("objects", "paper_objects.rds"))
 ggsave("figures/forest_multi.pdf", paper_objects$forest_multi, width = 10, height = 6)
+ggsave("figures/forest_multi.png", paper_objects$forest_multi, width = 10, height = 6)

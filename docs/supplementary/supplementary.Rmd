@@ -1,7 +1,7 @@
 ---
 title: "The Cognitive Effects of Computational Thinking: A Systematic Review and Meta-Analytic Study"
 subtitle: "Supplementary materials"
-bibliography: ../files/prova.bib
+bibliography: ../files/references.bib
 csl: ../files/apa7.csl
 header-includes:
     - \usepackage{fullpage}
@@ -225,20 +225,20 @@ get_dppc2_var <- function(dppc2, nt, nc, rho){
 
 When multiple variables are collected from the same pool of participants (e.g., multiple outcomes studies) and/or there are multiple experiments within the same paper, the effect size cannot be considered independent [@Cheung2019-po; @Cheung2014-fg]. Instead of pooling multiple effects into a single measure or keeping only a single effect, we computed a multivariate meta-analysis model taking into account the dependency (i.e., the correlation) between multiple effect sizes calculated on the same pool of participants. To compute the multivariate model we need to include or impute the variance-covariance matrix that describes how multiple effects correlate within each study. The section \@ref(correlations) explains our imputation approach.
 
-## Random-effect vs fixed-effect model
+## random-effects vs fixed-effects model
 
-Another important choice is between the fixed-effect and the random-effect model. Under the fixed-effect model, we make the assumption of a single *true* effect size that is estimated by a sample of studies. For this reason, the variability observed in the empirical meta-analysis is only caused by the sampling error.
+Another important choice is between the fixed-effects and the random-effects model. Under the fixed-effects model, we make the assumption of a single *true* effect size that is estimated by a sample of studies. For this reason, the variability observed in the empirical meta-analysis is only caused by the sampling error.
 
-On the other side, the *random-effect* model assumes a *distribution* of *true* effects. The model estimate the average effect (the *mean* of the distribution) and the between-study heterogeneity $\tau^2$ (i.e., the *variance* of the distribution). The critical assumption is that the observed heterogeneity is composed of sampling variability (as the *fixed-effect* model) and *true* between-study variability. The latter can be caused by different experimental designs, participants' features, or other study-level variables and can be explained using moderators (i.e., meta-regression).
+On the other side, the *random-effects* model assumes a *distribution* of *true* effects. The model estimate the average effect (the *mean* of the distribution) and the between-study heterogeneity $\tau^2$ (i.e., the *variance* of the distribution). The critical assumption is that the observed heterogeneity is composed of sampling variability (as the *fixed-effects* model) and *true* between-study variability. The latter can be caused by different experimental designs, participants' features, or other study-level variables and can be explained using moderators (i.e., meta-regression).
 
-The goal of the *random-effect* model is to generalize the meta-analytic findings at the population level while the *fixed-effect* model is focused on a specific pool of studies. 
+The goal of the *random-effects* model is to generalize the meta-analytic findings at the population level while the *fixed-effects* model is focused on a specific pool of studies. 
 
-We decided to use a *fixed-effect* model for several reasons.  Firstly, one reason to estimate $\tau^2$ (i.e., the focus of the *random-effect* model) is to explain the observed heterogeneity with study-level variables. Given our limited pool of studies, we did not include a meta-regression analysis. Furthermore, Under the *random-effect* framework, the multivariate model estimates the average effect and the variability ($\tau^2$) for each included outcome increasing the model complexity compared to the univariate counterpart. Crucially, with a limited number of studies the $\tau^2$ estimation can be strongly biased [@Veroniki2016-nw] influencing also the pooled effect estimation [@Borenstein2009-mo, pp.73-75] especially in terms of the standard error. Finally, the *fixed-effect* is less complex in terms of model parameters because we need to estimate only the average effect of each included outcome, taking into account the statistical dependency (see \@ref(uni-vs-multi)).
+We decided to use a *fixed-effects* model for several reasons.  Firstly, one reason to estimate $\tau^2$ (i.e., the focus of the *random-effects* model) is to explain the observed heterogeneity with study-level variables. Given our limited pool of studies, we did not include a meta-regression analysis. Furthermore, Under the *random-effects* framework, the multivariate model estimates the average effect and the variability ($\tau^2$) for each included outcome increasing the model complexity compared to the univariate counterpart. Crucially, with a limited number of studies the $\tau^2$ estimation can be strongly biased [@Veroniki2016-nw] influencing also the pooled effect estimation [@Borenstein2009-mo, pp.73-75] especially in terms of the standard error. Finally, the *fixed-effects* is less complex in terms of model parameters because we need to estimate only the average effect of each included outcome, taking into account the statistical dependency (see \@ref(uni-vs-multi)).
 
 ## Modelling functions
 
 We tested each model parameter (i.e., average effect for a specific outcome) using the Wald *z-test* with $\alpha = 0.05$.  
-For the *univariate fixed-effect* model we use the `metafor::rma()` function:
+For the *univariate fixed-effects* model we use the `metafor::rma()` function:
 
 ```{r, eval = FALSE}
 fit_uni_fixed <- function(data){
@@ -249,7 +249,7 @@ fit_uni_fixed <- function(data){
 }
 ```
 
-For the *univariate random-effect* model we use the `metafor::rma()` function and the REML estimator for $\tau^2$:
+For the *univariate random-effects* model we use the `metafor::rma()` function and the REML estimator for $\tau^2$:
 
 ```{r eval = FALSE}
 fit_uni_random <- function(data){
@@ -260,7 +260,7 @@ fit_uni_random <- function(data){
 }
 ```
 
-For the *multivariate fixed-effect* model we use the `metafor::rma.mv()` function:
+For the *multivariate fixed-effects* model we use the `metafor::rma.mv()` function:
 
 ```{r eval = FALSE}
 fit_multi_fixed <- function(data, cov_matrix){
@@ -272,7 +272,7 @@ fit_multi_fixed <- function(data, cov_matrix){
 }
 ```
 
-For the *multivariate random-effect* model we use the `metafor::rma.mv()` function:
+For the *multivariate random-effects* model we use the `metafor::rma.mv()` function:
 
 ```{r eval = FALSE}
 fit_multi_random <- function(data, cov_matrix, struct = "UN"){
@@ -288,7 +288,7 @@ fit_multi_random <- function(data, cov_matrix, struct = "UN"){
 }
 ```
 
-In both the multivariate cases we used the `outcome2` variable as a moderator with a *cell-mean parametrization* [@Schad2020-ht] (i.e., removing the intercept `0 + outcome2`). In this way model parameters and statistical tests correspond directly to the average effect for each outcome.  As explained in the previous section, the random-effect model estimate also a $\tau^2$ for each outcome (written as `random = ~ outcome2|paper_id`, see https://www.metafor-project.org/doku.php/analyses:berkey1995).
+In both the multivariate cases we used the `outcome2` variable as a moderator with a *cell-mean parametrization* [@Schad2020-ht] (i.e., removing the intercept `0 + outcome2`). In this way model parameters and statistical tests correspond directly to the average effect for each outcome.  As explained in the previous section, the random-effects model estimate also a $\tau^2$ for each outcome (written as `random = ~ outcome2|paper_id`, see https://www.metafor-project.org/doku.php/analyses:berkey1995).
 
 ### Variance-covariance matrix
 
@@ -304,7 +304,7 @@ get_block_cov_matrix <- function(data, rho){
 
 # Correlations imputation{#correlations}
 
-As explained in previous sections, we decided to use a *fixed-effect multivariate* model. To compute the model we need to include 3 correlations measures:
+As explained in previous sections, we decided to use a *fixed-effects multivariate* model. To compute the model we need to include 3 correlations measures:
 
 - For the effect size computation, we need the correlation between pre-post (*pre-post correlation*) scores for both groups
 - For the aggregation of multiple effects within the same paper (*aggregation correlation*) (see Section \@ref(aggregation)) we need the correlation between the effects
@@ -334,10 +334,10 @@ paper_objects$meta_table %>%
 We assessed the impact of our modeling assumptions using a sensitivity analysis approach. In particular, we considered:
 
 - 4 meta-analysis models:
-    - *univariate fixed-effect*
-    - *univariate random-effect*
-    - *multivariate fixed-effect*
-    - *multivariate random-effect*
+    - *univariate fixed-effects*
+    - *univariate random-effects*
+    - *multivariate fixed-effects*
+    - *multivariate random-effects*
 - All correlations combinations ($3 \rho_{pre-post} \times 3 \rho_{aggregation} \times 3 \rho_{multivariate}$)
 
 In this way, we computed `r 3*3*3*2+3*3*2` meta-analysis directly assessing the impact on the parameters estimation and p-values^[For *multivariate* models (*fixed* and *random*) we have 3x3x3 correlation combinations while for *univariate* models (*fixed* and *random*) only 3x3 ($\rho_{pre-post}$ and $\rho_{agg}$)]. All plots in the following pages depicted the sensitivity analysis for each outcome. Triangles indicate parameters with $p < 0.05$ while points indicate parameters with $p > 0.05$. Red shapes indicate the correlations/model combination included in the paper. Clearly, *random effect models* (both *univariate* and *multivariate*) are associated with wider confidence intervals (i.e., less precise estimation) compared to *fixed effect models*.
